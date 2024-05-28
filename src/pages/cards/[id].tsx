@@ -2,7 +2,17 @@ import React from "react";
 import {Card as CardInterface} from "@/interfaces";
 import {GetServerSideProps} from "next";
 import Card from "@/components/Card/Card";
-import {Box, Button, CssBaseline, FormControl, InputLabel, MenuItem, Select, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    CssBaseline,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    Typography
+} from "@mui/material";
 import BattleResult from "@/components/BattleResult/BattleResult";
 
 const CardDetailsPage: React.FC<{ cards: CardInterface[], card: CardInterface }> = ({card, cards}) => {
@@ -14,9 +24,9 @@ const CardDetailsPage: React.FC<{ cards: CardInterface[], card: CardInterface }>
     React.useEffect(() => {
         const newDefender = cards.find(card => String(card.id) === String(currentCard))
         setDefender(newDefender)
-    }, [currentCard])
+    }, [currentCard, cards])
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: SelectChangeEvent<string>) => {
         setCurrentCard(event.target.value)
     }
 

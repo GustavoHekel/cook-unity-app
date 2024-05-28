@@ -125,6 +125,12 @@ export interface Card {
      * @memberof Card
      */
     'rarity'?: Rarity;
+    /**
+     * 
+     * @type {string}
+     * @memberof Card
+     */
+    'imageURL'?: string;
 }
 /**
  * 
@@ -138,6 +144,44 @@ export interface CardResponse {
      * @memberof CardResponse
      */
     'data': Card;
+}
+/**
+ * 
+ * @export
+ * @interface CardStatsResponse
+ */
+export interface CardStatsResponse {
+    /**
+     * 
+     * @type {CardStatsResponseData}
+     * @memberof CardStatsResponse
+     */
+    'data': CardStatsResponseData;
+}
+/**
+ * 
+ * @export
+ * @interface CardStatsResponseData
+ */
+export interface CardStatsResponseData {
+    /**
+     * 
+     * @type {Card}
+     * @memberof CardStatsResponseData
+     */
+    'card'?: Card;
+    /**
+     * 
+     * @type {Array<Card>}
+     * @memberof CardStatsResponseData
+     */
+    'weaknesses'?: Array<Card>;
+    /**
+     * 
+     * @type {Array<Card>}
+     * @memberof CardStatsResponseData
+     */
+    'resistances'?: Array<Card>;
 }
 /**
  * 
@@ -261,6 +305,36 @@ export const CardsApiAxiosParamCreator = function (configuration?: Configuration
          */
         getCardById: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/cards/{id}`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get card stats
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCardStats: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/cards/{id}/stats`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -409,6 +483,18 @@ export const CardsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get card stats
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getCardStats(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<CardStatsResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCardStats(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['CardsApi.getCardStats']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Get all cards
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -473,6 +559,15 @@ export const CardsApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get card stats
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getCardStats(options?: any): AxiosPromise<CardStatsResponse> {
+            return localVarFp.getCardStats(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Get all cards
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -528,6 +623,17 @@ export class CardsApi extends BaseAPI {
      */
     public getCardById(options?: RawAxiosRequestConfig) {
         return CardsApiFp(this.configuration).getCardById(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get card stats
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof CardsApi
+     */
+    public getCardStats(options?: RawAxiosRequestConfig) {
+        return CardsApiFp(this.configuration).getCardStats(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
