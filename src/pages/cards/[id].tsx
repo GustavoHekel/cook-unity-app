@@ -107,6 +107,7 @@ const CardDetailsPage: React.FC<{ cards: CardInterface[], card: CardInterface }>
                 variant={"contained"}
                 color={"primary"}
                 onClick={handleClick}
+                disabled={!defender}
             >
                 Battle!
             </Button>
@@ -133,7 +134,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
         return {
             props: {
-                cards: cards.data,
+                cards: cards.data.cards,
                 card: card.data
             }
         }
